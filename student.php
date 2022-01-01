@@ -119,7 +119,7 @@ echo "<table border='1' cellspacing='2' cellpadding='2'>";
                 echo "<tr><th>Name</th><th>Telephone #</th></tr>";
                 while ($row = mysqli_fetch_assoc($result)){
                     echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
-                        $row['telephone']."</td></tr>";      
+                        $row['student_telephone']."</td></tr>";      
                 }
             }
             else if($dropdown_val == 'major'){
