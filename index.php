@@ -1,5 +1,5 @@
 <?php
-    include_once 'sql_connect.php';
+    include_once 'sql_connect.php';     // SQL Server Connection
 ?>
 
 <html>
@@ -17,69 +17,26 @@
 ?>
 
 <form method = "post">
-    <!-- <input type = "submit" name = "button" value = "button" /> -->
-    <!-- <select name = "selection">
-        <option>Professors</option>
-        <option>Students</option>
-        <option>Department</option>
-        <option>Courses</option>
-        <option>Sections</option>
-    </select> -->
-    <!-- <input type = "submit" name="professors" value="Professors"></input>
-    <input type = "submit" name="students" value="Students"></input>
-    <input type = "submit" name="department" value="Department"></input>
-    <input type = "submit" name="courses" value="Courses"></input>
-    <input type = "submit" name="sections" value="Sections"></input> -->
-
     <button type = submit style = "background-color:coral;" name = "professors" value = "Professors">Professors</button>
-    <button type = submit style = "background-color:coral;"name = "students" value = "Students">Students</button>
-    <button type = submit style = "background-color:coral;"name = "department" value = "Department">Department</button>
-    <button type = submit style = "background-color:coral;"name = "courses" value = "Courses">Courses</button>
-    <button type = submit style = "background-color:coral;"name = "sections" value = "Sections">Sections</button>
-
-    <!-- <form action="http://ecs.fullerton.edu/~cs332s25/student.php">
-            <button type= submit value= STUDENT>STUDENT</button>
-        </form> -->
-
+    <button type = submit style = "background-color:coral;"name = "students" value = "Students">Students</button?>
 </form>
 
 <?php
-    $sql;
-    $result = $conn->query($sql);
-    $result_check = mysqli_num_rows($result);
-
 // ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
+    // To Student Tab
     if(isset($_POST['students'])){
         header("Location: student.php");
     }
 
 // ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
+    // To Student Tab
     if(isset($_POST['professors'])){
         header("Location: professor.php");
     }
 
 // ---------------------------------------------------------------------------
-    if(isset($_POST['department'])){
-        header("Location: department.php");
-    }
-
-// ---------------------------------------------------------------------------
-    if(isset($_POST['courses'])){
-        header("Location: courses.php");
-    }
-
-// ---------------------------------------------------------------------------
-
-if(isset($_POST['sections'])){
-    header("Location: sections.php");
-}
-
-// ---------------------------------------------------------------------------
-
-
-
 ?>
-
-</body>
-
-</html>

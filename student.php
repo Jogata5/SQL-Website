@@ -1,5 +1,5 @@
 <?php
-    include_once 'sql_connect.php';
+    include_once 'sql_connect.php';     // SQL Server Connection
 ?>
 
 <html>
@@ -7,27 +7,31 @@
     <meta charset="UTF-8">
     <title>Database Homepage </title>
 </head>
+<stlye>
+</stlye>
 <body>
-<h1 style = "font-size:xx-large; color:royalblue; text-align:left; font-family:Copperplate; background-color:aliceblue; outline-color:black">Student Table</h1>
+<h1 style = "font-size:xx-large; color:royalblue; text-align:left; font-family:Copperplate; background-color:aliceblue; outline-color:black">Student Tab</h1>
 
 <form method = "post">
-    <button type = submit style = "background-color:coral;" name = "main" value = "Main">Main Menu</button>
-    <button type = submit style = "background-color:coral;" name = "all" value = "All">Print Table</button>
+    <button type = submit style = "background-color:coral;" name = "main">Main Menu</button>
+    <button type = submit style = "background-color:coral;" name = "all">Print Table</button>
+    <button type = submit style = "background-color:coral;" name = "course_search">Course Search</button>
+    <button type = submit style = "background-color:coral;" name = "cwid_search">CWID Grade Search</button>
     <select name = "selection" >
-        <option value = "name">Name</option>
+        <option value = "" disabled selected>Select</option>
         <option value = "cwid">CWID</option>
         <option value = "address">Address</option>
         <option value = "telephone">Telephone</option>
+        <option value = "major">Major</option>
+        <option value = "minors">Minors</option>
     </select>
-    <!-- <input type = "submit" name = "submit" value = "Options"></input> -->
     <button type = "submit" style = "background-color:coral;" name = "list" value = "selection" >View</button>
-    
-    <input type = text name = "custom" value = "">
-        <button type = submit style = "background-color:coral;" name = "search" value = "Search">Search</button>
-    </input>
 </form>
 
 <?php
+echo "<table border='1' cellspacing='2' cellpadding='2'>";
+// ---------------------------------------------------------------------------
+// COMPLETE
 // ---------------------------------------------------------------------------
     // Back to main menu
     if(isset($_POST['main'])){
@@ -35,57 +39,101 @@
     }
 
 // ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
+   // Back to Course Search
+   if(isset($_POST['course_search'])){
+    header("Location: student_course_search.php");
+    }
+
+// ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
+    // To CWID Search
+    if(isset($_POST['cwid_search'])){
+    header("Location: student_cwid_search.php");
+    }
+
+// ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
     // Show table
     if(isset($_POST['all'])){
-        $sql = "SELECT * FROM students;";
-        $result = $conn->query($sql);
-        $result_check = mysqli_num_rows($result);
+        // Selects all student info
+        $sql = "SELECT * 
+            FROM Students AS s
+            INNER JOIN Departments AS d ON s.major = d.dept_number
+            INNER JOIN Student_Minors AS m ON s.cwid = m.student_cwid;";
+            
+        $result = mysqli_query($conn, $sql);        // Stores query from SQL selection
+        $result_check = mysqli_num_rows($result);       // Counts the number of row in the query, check for population
+
+        // Checks if query is populated
         if ($result_check > 0){
-            echo "<pre>" . "Name" . "\t|\t" . "CWID" . "\t\t|\t\t\t" . "Address" . "\t\t\t|\t" . "Telephone" . "\t|\t" . "<br>";
-            echo "-------------------------------------------------------------------------------------------------------------------------";
+            echo "<tr><th>Name</th><th>CWID</th><th>Address</th><th>Telephone</th><th>Major</th><th>Minor(s)</th></tr>";
+            // Loop through query, row by row and output
             while ($row = mysqli_fetch_assoc($result)){
-                echo "<pre>" . $row['name'] ."\t|\t". $row['cwid'] ."\t|\t". $row['address'] ."\t|\t". $row['telephone'] ."\t|\t" . "<br>";      
+                echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                    $row['cwid']."</td><td>".$row['student_address']."</td><td>".
+                    $row['student_telephone']."</td><td>".$row['dept_name']."</td><td>".$row['minor'].
+                    "</td></tr>";       
             }
         }
         else{
-            echo " 0 results" . "<br>";
+            echo " 0 results";
         }
     }
 
 // ---------------------------------------------------------------------------
+// COMPLETE
+// ---------------------------------------------------------------------------
     // Show selected values from dropdown
     else if(isset($_POST['list'])){
-        $dropdown_val = $_POST['selection'];
-        $sql = "SELECT $dropdown_val FROM students;";
-        $result = $conn->query($sql);
-        $result_check = mysqli_num_rows($result);
+        $dropdown_val = $_POST['selection'];        // Stores dropdown selection
+        // Select all professor info in SQL Database
+        $sql = "SELECT * 
+            FROM Students AS s
+            INNER JOIN Departments AS d ON s.major = d.dept_number
+            INNER JOIN Student_Minors AS m ON s.cwid = m.student_cwid;";
+
+        $result = $conn->query($sql);       // Stores query from SQL selection
+        $result_check = mysqli_num_rows($result);       // Counts the number of row in the query, check for population
+
+        // Checks if query is populated, then checks dropdown values for output
         if ($result_check > 0){
-            if($dropdown_val == 'name'){
-                echo "<pre>" . "Name" . "<br>";
-                echo "-------------------------------------------------------------------------------------------------------------------------";
+            if($dropdown_val == 'cwid'){
+                echo "<tr><th>Name</th><th>CWID</th></tr>";
                 while ($row = mysqli_fetch_assoc($result)){
-                    echo "<pre>" . $row['name'] . "<br>";      
-                }
-            }
-            else if($dropdown_val == 'cwid'){
-                echo "<pre>" . "CWID" . "<br>";
-                echo "-------------------------------------------------------------------------------------------------------------------------";
-                while ($row = mysqli_fetch_assoc($result)){
-                    echo "<pre>" . $row['cwid'] . "<br>";      
+                    echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                        $row['cwid'] . "</td></tr>";      
                 }
             }
             else if($dropdown_val == 'address'){
-                echo "<pre>" . "Address" . "<br>";
-                echo "-------------------------------------------------------------------------------------------------------------------------";
+                echo "<tr><th>Name</th><th>Address</th></tr>";
                 while ($row = mysqli_fetch_assoc($result)){
-                    echo "<pre>" . $row['address'] . "<br>";      
+                    echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                        $row['student_address'] . "</td></tr>";      
                 }
             }
             else if($dropdown_val == 'telephone'){
-                echo "<pre>" . "Telephone #" . "<br>";
-                echo "-------------------------------------------------------------------------------------------------------------------------";
+                echo "<tr><th>Name</th><th>Telephone #</th></tr>";
                 while ($row = mysqli_fetch_assoc($result)){
-                    echo "<pre>" . $row['telephone'] . "<br>";      
+                    echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                        $row['telephone']."</td></tr>";      
+                }
+            }
+            else if($dropdown_val == 'major'){
+                echo "<tr><th>Name</th><th>Major</th></tr>";
+                while ($row = mysqli_fetch_assoc($result)){
+                    echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                        $row['dept_name']."</td></tr>";      
+                }
+            }
+            else if($dropdown_val == 'minors'){
+                echo "<tr><th>Name</th><th>Minor(s)</th></tr>";
+                while ($row = mysqli_fetch_assoc($result)){
+                    echo "<tr><td>".$row['student_fname']." ".$row['student_lname']."</td><td>".
+                        $row['minor']."</td></tr>";      
                 }
             }
         }
@@ -93,28 +141,5 @@
             echo " 0 results" . "<br>";
         }
     }
- 
-// ---------------------------------------------------------------------------    
-    // Show searched
-    else if(isset($_POST['custom'])){
-        $val = $_POST['custom'];
-        //$val = strtolower($val);
-        echo "$val";
-        $sql = "SELECT * FROM students AS s WHERE 'name' LIKE '$val' ;";
-        $result = $conn->query($sql);
-        $result_check = mysqli_num_rows($result);
-        if ($result_check > 0){
-            echo "<pre>" . "Name" . "\t|\t" . "CWID" . "\t\t|\t\t\t" . "Address" . "\t\t\t|\t" . "Telephone" . "\t|\t" . "<br>";
-            echo "-------------------------------------------------------------------------------------------------------------------------";
-            while ($row = mysqli_fetch_assoc($result)){
-                echo "<pre>" . $row['name'] ."\t|\t". $row['cwid'] ."\t|\t". $row['address'] ."\t|\t". $row['telephone'] ."\t|\t" . "<br>";      
-            }
-        }
-        else{
-            echo "0 results" . "<br>";
-        }
-    }
-
-
-
+// ---------------------------------------------------------------------------      
 ?>
